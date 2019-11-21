@@ -9,7 +9,7 @@
 ####
 
 ####  ToDo: Write checker for existing letters
-####  ToDo: functio for adding repetative same letters must be added  
+####  ToDo: functio for adding repetative same letters must be added  - OK
 
 #####################################
 
@@ -23,8 +23,12 @@ zamenjaj2 <- function(beseda, crka, iskana_beseda){
   
   if (regexpr(crka, beseda)[1] > 0) {
     
-    pozicija <- regexpr(crka, beseda)[1]
-    iskana_beseda[pozicija] <- crka
+    #pozicija <- regexpr(crka, beseda)[1]
+    #iskana_beseda[pozicija] <- crka
+    
+    pozicije <- which(strsplit(beseda, "")[[1]]==crka)
+    iskana_beseda[pozicije] <- crka
+    
     print(paste(iskana_beseda, collapse =  " "))
     
     #convert back to single string to check for equality
