@@ -23,7 +23,7 @@ git clone -n https://github.com/tomaztk/Hangman_game_with_R
 
 ## Contributors and co-authors 
 
-Thanks to these wonderful people community people making this classical game in R better. Contributions of any kind is highly appreciated!
+Thanks to these wonderful community people making this classical game in R better. Contributions of any kind is highly appreciated!
 
 <!-- Contributors :START -->
 <table>
