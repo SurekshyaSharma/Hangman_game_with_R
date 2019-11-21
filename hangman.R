@@ -8,8 +8,11 @@
 ####  Version: 0.0.2
 ####
 
+
 ####  ToDo: Write checker for existing letters
-####  ToDo: functio for adding repetative same letters must be added  - OK
+####  ToDo: function for adding repetative same letters must be added  - OK
+####  ToDo: check small and capital letter for word and letters 
+
 
 #####################################
 
@@ -25,6 +28,8 @@ zamenjaj2 <- function(beseda, crka, iskana_beseda){
     
     #pozicija <- regexpr(crka, beseda)[1]
     #iskana_beseda[pozicija] <- crka
+    beseda <- base::tolower(beseda)
+    crka <- base::tolower(crka)
     
     pozicije <- which(strsplit(beseda, "")[[1]]==crka)
     iskana_beseda[pozicije] <- crka
@@ -53,11 +58,13 @@ drawHead <- function(orig_position = c(0,0),
   return(data.frame (x = x_data, y = y_data, group = group))
 }
 
-drawMan <- function(st_napak) {
+drawMan <- function(st_napak) { #, iskana_beseda) {
   
   ggplot(levels[which(levels$group <= st_napak), ], aes(x = x, y = y, group = group)) + 
     geom_path(size = 2.5) + 
-    theme_void()
+    theme_void() +
+    ggtitle('Classic Hangman Game')
+    #ggtitle('Hangman Game, word is: ', iskana_beseda)
   
 }
 
@@ -98,6 +105,7 @@ active = TRUE
 StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capital letters are available. 
   beseda <- readline(prompt = "Word: ")
   cat("\f") # Clean after entering words
+  graphics.off() #Clean Graphics
   if (sensitive.flag == FALSE) {
     beseda <- base::tolower(beseda)
   }
@@ -123,7 +131,7 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
       #print(zamenjaj2(beseda, crka))  
       print(paste("Yay!","Try N:",i+1,"Wrong letters: {",(toString(paste0(cilj_n, sep=","))),"}")) 
       
-      if (as.character(paste(iskana_beseda, collapse = "")) == beseda) {
+      if (as.character(paste(base::tolower(iskana_beseda), collapse = "")) == base::tolower(beseda)) {
         active == FALSE
         print("Bravo, win!")
         break
@@ -136,7 +144,7 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
       
       #Graph
       st_napak <- as.integer(length(cilj_n))
-      print(drawMan(st_napak = st_napak))
+      print(drawMan(st_napak = st_napak))#,iskana_beseda=paste(iskana_beseda, collapse =  " ") ))
       
       if(as.integer(st_napak) == 7){
         active == FALSE
