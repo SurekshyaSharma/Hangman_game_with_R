@@ -9,6 +9,7 @@
 ####
 
 ####  ToDo: Write checker for existing letters
+####  ToDo: functio for adding repetative same letters must be added  
 
 #####################################
 
@@ -69,7 +70,7 @@ level3 <- data.frame(x = c(4, 5, 6), y= c (5, 5, 5), group = c(3, 3, 3))
 level4 <- data.frame(x = c(6, 6), y = c(5, 4), group = c(4, 4))
 level5 <- drawHead(c(6, 3.5), 1, 10, 5)
 level6 <- data.frame(x = c(6, 6, 5.8, 6.2), 
-                     y =c 3,1.5,1.5,1.5), group = c(6, 6, 6, 6))
+                     y =c(3,1.5,1.5,1.5), group = c(6, 6, 6, 6)) #missing opening bracket
 level7 <- data.frame(x = c(5.5, 6, 6.5), y = c(2, 2.5, 2), group = c(7, 7, 7))
 levels <- rbind(level1, level2, level3, level4, level5, level6, level7)
 rm(level1, level2, level3, level4, level5, level6, level7)
@@ -92,15 +93,12 @@ active = TRUE
 
 StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capital letters are available. 
   beseda <- readline(prompt = "Word: ")
-  
+  cat("\f") # Clean after entering words
   if (sensitive.flag == FALSE) {
     beseda <- base::tolower(beseda)
   }
   
-  #beseda <- 'miza'
   
-  #iskana_beseda <- replicate(nchar(beseda),'_')
-  #iskana_beseda <- toString(as.character(replicate(nchar(beseda), ' _ ')))
   iskana_beseda <- replicate(nchar(beseda), '_')
   
   
@@ -145,7 +143,7 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
     }
     
     i= i + 1
-    #cat("\f")  
+ 
     if(st_napak == 7){
       active == FALSE
       break
@@ -153,3 +151,9 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
     }
   }
 }
+
+#####################
+### Start new Game
+#####################
+
+StartNewGame()
