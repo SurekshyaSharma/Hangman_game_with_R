@@ -5,11 +5,11 @@
 ####  Created by Tomaz Kastrun
 ####  Contributed by Jesus Armand Calejero Roman
 ####  Date: November, 21, 2019
-####  Version: 0.0.2
+####  Version: 0.0.3
 ####
 
 
-####  ToDo: Write checker for existing letters
+####  ToDo: Write checker for existing letters -OK
 ####  ToDo: function for adding repetative same letters must be added  - OK
 ####  ToDo: check small and capital letter for word and letters 
 
@@ -68,6 +68,26 @@ drawMan <- function(st_napak) { #, iskana_beseda) {
   
 }
 
+
+CheckDuplicate <- function(crka, izbor){
+  if (length(izbor) == 0) {
+    print('Zero length; adding...')
+    izbor <- rbind(izbor, izb=crka)  
+    izbor[,1] <- as.character(izbor[,1])
+  } else {
+    if (grepl(crka,izbor) == TRUE) {
+      izbor[,1] <- as.character(izbor[,1])
+      print("exists")
+    } else {
+      izbor <- rbind(izbor, izb=crka)
+      izbor[,1] <- as.character(izbor[,1])
+      print("added...")
+    }
+  }
+  return(izbor)
+}
+
+
 ########################
 ###### Data for graph
 ########################
@@ -81,7 +101,7 @@ level3 <- data.frame(x = c(4, 5, 6), y= c (5, 5, 5), group = c(3, 3, 3))
 level4 <- data.frame(x = c(6, 6), y = c(5, 4), group = c(4, 4))
 level5 <- drawHead(c(6, 3.5), 1, 10, 5)
 level6 <- data.frame(x = c(6, 6, 5.8, 6.2), 
-                     y =c(3,1.5,1.5,1.5), group = c(6, 6, 6, 6)) #missing opening bracket
+                     y =c(3,1.5,1.5,1.5), group = c(6, 6, 6, 6))
 level7 <- data.frame(x = c(5.5, 6, 6.5), y = c(2, 2.5, 2), group = c(7, 7, 7))
 levels <- rbind(level1, level2, level3, level4, level5, level6, level7)
 rm(level1, level2, level3, level4, level5, level6, level7)
@@ -93,9 +113,9 @@ rm(level1, level2, level3, level4, level5, level6, level7)
 rm(st_napak, izbor, crka, cilj, cilj_n, iskana_beseda, beseda, i, active)
 st_napak = 0
 i = 0
-izbor = NULL
+izbor = data.frame(izb=c(NULL))
 cilj = NULL
-cilj_n = NULL
+cilj_n = data.frame(izb=c(NULL))
 active = TRUE
 
 ########################
@@ -104,8 +124,9 @@ active = TRUE
 
 StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capital letters are available. 
   beseda <- readline(prompt = "Word: ")
-  cat("\f") # Clean after entering words
-  graphics.off() #Clean Graphics
+  
+  cat("\f") 
+  graphics.off() 
   if (sensitive.flag == FALSE) {
     beseda <- base::tolower(beseda)
   }
@@ -121,15 +142,15 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
     }
     
     crka <- readline(prompt="Enter Letter: ")
-    izbor <- rbind(izbor, crka)
+    izbor <- CheckDuplicate(crka, izbor)
     
     #iskana_beseda
     if (grepl(crka, beseda) == TRUE) {
       
       cilj <- rbind(cilj, crka)
       iskana_beseda <- zamenjaj2(beseda, crka, iskana_beseda)
-      #print(zamenjaj2(beseda, crka))  
-      print(paste("Yay!","Try N:",i+1,"Wrong letters: {",(toString(paste0(cilj_n, sep=","))),"}")) 
+       
+      print(paste("Yay!","Try N:",i+1)) 
       
       if (as.character(paste(base::tolower(iskana_beseda), collapse = "")) == base::tolower(beseda)) {
         active == FALSE
@@ -138,12 +159,11 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
       }
       
     } else {
-      cilj_n <- rbind(cilj_n, crka)
-      print(paste("Nope!","Try N:",i + 1, "Wrong letters: {",(toString(paste0(cilj_n, sep = ","))),"}")) 
-      #print(toString(paste0(cilj_n, sep=",")))
+      cilj_n <- CheckDuplicate(crka=crka, izbor=cilj_n)
+      print(paste("Nope!","Try N:",i + 1, "Wrong letters: {",(toString(paste0(cilj_n[,1], sep = ","))),"}")) 
       
       #Graph
-      st_napak <- as.integer(length(cilj_n))
+      st_napak <- as.integer(nrow(cilj_n))
       print(drawMan(st_napak = st_napak))#,iskana_beseda=paste(iskana_beseda, collapse =  " ") ))
       
       if(as.integer(st_napak) == 7){
