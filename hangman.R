@@ -34,12 +34,12 @@ zamenjaj2 <- function(beseda, crka, iskana_beseda){
     pozicije <- which(strsplit(beseda, "")[[1]]==crka)
     iskana_beseda[pozicije] <- crka
     
-    print(paste(iskana_beseda, collapse =  " "))
+    message(paste(iskana_beseda, collapse =  " "))
     
     #convert back to single string to check for equality
     if (paste(iskana_beseda, collapse = "") == beseda) {
       return(iskana_beseda)
-      print("End Game!")
+      message("End Game!")
     }
     
     return(iskana_beseda)
@@ -71,17 +71,17 @@ drawMan <- function(st_napak) { #, iskana_beseda) {
 
 CheckDuplicate <- function(crka, izbor){
   if (length(izbor) == 0) {
-    print('Zero length; adding...')
+    message('Zero length; adding...')
     izbor <- rbind(izbor, izb=crka)  
     izbor[,1] <- as.character(izbor[,1])
   } else {
     if (grepl(crka,izbor) == TRUE) {
       izbor[,1] <- as.character(izbor[,1])
-      print("exists")
+      message("exists")
     } else {
       izbor <- rbind(izbor, izb=crka)
       izbor[,1] <- as.character(izbor[,1])
-      print("added...")
+      message("added...")
     }
   }
   return(izbor)
@@ -101,7 +101,7 @@ level3 <- data.frame(x = c(4, 5, 6), y= c (5, 5, 5), group = c(3, 3, 3))
 level4 <- data.frame(x = c(6, 6), y = c(5, 4), group = c(4, 4))
 level5 <- drawHead(c(6, 3.5), 1, 10, 5)
 level6 <- data.frame(x = c(6, 6, 5.8, 6.2), 
-                     y =c(3,1.5,1.5,1.5), group = c(6, 6, 6, 6))
+                     y =c(3, 1.5, 1.5, 1.5), group = c(6, 6, 6, 6))
 level7 <- data.frame(x = c(5.5, 6, 6.5), y = c(2, 2.5, 2), group = c(7, 7, 7))
 levels <- rbind(level1, level2, level3, level4, level5, level6, level7)
 rm(level1, level2, level3, level4, level5, level6, level7)
@@ -110,7 +110,7 @@ rm(level1, level2, level3, level4, level5, level6, level7)
 ### Helper variables
 ########################
 
-rm(st_napak, izbor, crka, cilj, cilj_n, iskana_beseda, beseda, i, active)
+suppressWarnings(rm(st_napak, izbor, crka, cilj, cilj_n, iskana_beseda, beseda, i, active))
 st_napak = 0
 i = 0
 izbor = data.frame(izb=c(NULL))
@@ -131,9 +131,7 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
     beseda <- base::tolower(beseda)
   }
   
-  
   iskana_beseda <- replicate(nchar(beseda), '_')
-  
   
   while (active == TRUE) {
     
@@ -142,6 +140,10 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
     }
     
     crka <- readline(prompt="Enter Letter: ")
+    
+    if (nchar(crka)>1) message("Taking first letter")
+    crka <- substr(crka, 1, 1)
+    
     izbor <- CheckDuplicate(crka, izbor)
     
     #iskana_beseda
@@ -150,17 +152,17 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
       cilj <- rbind(cilj, crka)
       iskana_beseda <- zamenjaj2(beseda, crka, iskana_beseda)
        
-      print(paste("Yay!","Try N:",i+1)) 
+      message(paste("Yay!","Try N:",i+1)) 
       
       if (as.character(paste(base::tolower(iskana_beseda), collapse = "")) == base::tolower(beseda)) {
         active == FALSE
-        print("Bravo, win!")
+        message("Bravo, win!")
         break
       }
       
     } else {
       cilj_n <- CheckDuplicate(crka=crka, izbor=cilj_n)
-      print(paste("Nope!","Try N:",i + 1, "Wrong letters: {",(toString(paste0(cilj_n[,1], sep = ","))),"}")) 
+      message(paste("Nope!","Try N:",i + 1, "Wrong letters: {",(toString(paste0(cilj_n[,1], sep = ","))),"}")) 
       
       #Graph
       st_napak <- as.integer(nrow(cilj_n))
@@ -169,7 +171,7 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
       if(as.integer(st_napak) == 7){
         active == FALSE
         break
-        print("End Game")
+        message("End Game")
       }
       
     }
@@ -179,7 +181,7 @@ StartNewGame <- function(sensitive.flag = TRUE) { # sensitive.flag: TRUE -> capi
     if(st_napak == 7){
       active == FALSE
       break
-      print("End game")
+      message("End game")
     }
   }
 }
